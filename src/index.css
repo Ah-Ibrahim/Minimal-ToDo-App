@@ -6,6 +6,10 @@
 }
 
 @theme {
+  --tw-duration: 0.35s;
+
+  --color-primary: white;
+  --color-secondary: ;
 }
 
 @layer base {
@@ -15,7 +19,11 @@
 
   body {
     font-family: 'Roboto', sans-serif;
-    color: white;
+    color: var(--color-primary);
+  }
+
+  button:not([disabled]) {
+    cursor: pointer;
   }
 }
 
@@ -28,6 +36,6 @@
   }
 
   .glass {
-    backdrop-filter: blur(30px);
+    backdrop-filter: blur(40px);
   }
 }
