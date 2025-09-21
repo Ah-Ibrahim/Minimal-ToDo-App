@@ -1,10 +1,33 @@
 @import 'tailwindcss';
 
+@font-face {
+  font-family: 'Roboto';
+  src: url('./assets/fonts/Roboto-VariableFont_wdth,wght.ttf');
+}
+
 @theme {
 }
 
 @layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Roboto', sans-serif;
+    color: white;
+  }
 }
 
 @layer components {
+  .bg-circle {
+    position: absolute;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .glass {
+    backdrop-filter: blur(30px);
+  }
 }
