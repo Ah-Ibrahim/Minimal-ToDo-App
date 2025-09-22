@@ -5,27 +5,36 @@ import { nanoid } from 'nanoid';
 
 type ShownStatusType = 'all' | 'completed' | 'uncompleted';
 
-const initialTodos: TodoType[] = [
-  {
-    id: nanoid(),
-    text: 'Add more content',
-    isCompleted: false,
-  },
-  {
-    id: nanoid(),
-    text: 'Make this Project',
-    isCompleted: true,
-  },
-];
-
 const todosFilter: Record<ShownStatusType, (item: TodoType) => boolean> = {
   all: () => true,
   completed: (item) => item.isCompleted === true,
   uncompleted: (item) => item.isCompleted === false,
 };
 
+function initializeTodos(): TodoType[] {
+  const todosBodies: TodoBody[] = JSON.parse(
+    localStorage.getItem('Todos') ?? '[]'
+  );
+
+  const todos: TodoType[] = todosBodies.map((todoBody) => ({
+    ...todoBody,
+    id: nanoid(),
+  }));
+
+  return todos;
+}
+
+function saveTodos(todos: TodoType[]): void {
+  const todosBodies: TodoBody[] = todos.map((todo) => ({
+    ...todo,
+    id: undefined,
+  }));
+
+  localStorage.setItem('Todos', JSON.stringify(todosBodies));
+}
+
 function MainPage() {
-  const [todos, setTodos] = useState<TodoType[]>(initialTodos);
+  const [todos, setTodos] = useState<TodoType[]>(() => initializeTodos());
 
   const [shownStatus, setIsShownStatus] = useState<ShownStatusType>('all');
   const [newTodoText, setNewTask] = useState<string>('');
@@ -92,6 +101,10 @@ function MainPage() {
 
     return () => document.removeEventListener('keydown', handler);
   });
+
+  useEffect(() => {
+    saveTodos(todos);
+  }, [todos]);
 
   const todoItems = filteredTodos.map((item) => (
     <Todo
