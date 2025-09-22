@@ -4,7 +4,7 @@ import MainPage from './pages/MainPage';
 
 function App() {
   return (
-    <main className="h-dvh overflow-hidden relative">
+    <main className="h-screen overflow-hidden relative">
       <Background />
       <div className="glass h-full absolute inset-0">
         <MainPage />

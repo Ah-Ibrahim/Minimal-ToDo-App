@@ -1,22 +1,66 @@
+import Todo from '../components/Todo';
 import { useState } from 'react';
+import type { TodoType, TodoBody } from '../types/GlobalTypes';
+import { nanoid } from 'nanoid';
 
 type ShownStatusType = 'all' | 'completed' | 'uncompleted';
 
+const initialTodos: TodoType[] = [
+  {
+    id: nanoid(),
+    text: 'Add more content',
+    isCompleted: false,
+  },
+  {
+    id: nanoid(),
+    text: 'Make this Project',
+    isCompleted: true,
+  },
+];
+
+const todosFilter: Record<ShownStatusType, (item: TodoType) => boolean> = {
+  all: () => true,
+  completed: (item) => item.isCompleted === true,
+  uncompleted: (item) => item.isCompleted === false,
+};
+
 function MainPage() {
+  const [todos, setTodos] = useState<TodoType[]>(initialTodos);
+
   const [shownStatus, setIsShownStatus] = useState<ShownStatusType>('all');
   const [newTask, setNewTask] = useState<string>('');
   const [isValidNewTask, setIsValidNewTask] = useState<boolean>(false);
 
+  const filterFunc = todosFilter[shownStatus];
+  const filteredTodos: TodoType[] = todos.filter(filterFunc);
+
+  const handleChangeTodo = (id: string, changedTodo: TodoBody) => {
+    setTodos(
+      todos.map((item: TodoType) => {
+        if (item.id !== id) return item;
+
+        return {
+          id,
+          text: changedTodo.text,
+          isCompleted: changedTodo.isCompleted,
+        };
+      }) ?? []
+    );
+  };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewTask(e.target.value);
 
     setIsValidNewTask(isValidInput(e.target.value));
   };
 
+  const todoItems = filteredTodos.map((item) => (
+    <Todo key={item.id} todo={item} onChange={handleChangeTodo} />
+  ));
+
   return (
     <section className="p-8 relative h-full">
       <h1 className="text-3xl mb-4 font-semibold">Active Tasks</h1>
-      <div className="flex gap-x-4">
+      <div className="flex gap-x-4 mb-8">
         <button
           className={`${
             shownStatus !== 'all' ? 'text-gray-500' : ''
@@ -45,7 +89,8 @@ function MainPage() {
           Uncompleted
         </button>
       </div>
-      <div className="absolute flex bottom-0 left-0 right-0 p-8 justify-between gap-x-4">
+      <div className="space-y-4">{todoItems}</div>
+      <div className="absolute flex bottom-0 left-0 right-0 m-8 justify-between gap-x-4">
         <input
           type="text"
           value={newTask}
@@ -56,11 +101,14 @@ function MainPage() {
           placeholder="Enter new task"
         />
         <button
-          className={`w-8 aspect-square transition-colors ${
-            isValidNewTask ? 'text-primary' : 'text-gray-500'
+          className={` w-8 aspect-square transition-colors ${
+            isValidNewTask
+              ? 'text-secondary drop-shadow-[0_0_6px_currentColor]'
+              : 'text-gray-500'
           }`}
         >
           <svg
+            className=""
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="currentColor"

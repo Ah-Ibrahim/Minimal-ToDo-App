@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import useMediaQuery from '../hooks/useMediaQuery';
 type Color = `#${string}`;
 
@@ -29,8 +28,8 @@ function Background() {
     ></div>
   ));
 
-  console.log(circles[0]);
-  console.log(circles[1]);
+  // console.log(circles[0]);
+  // console.log(circles[1]);
 
   return <div className="bg-[#1e1e1e] h-full overflow-hidden">{circles}</div>;
 }
