@@ -8,7 +8,9 @@ import {
   saveTodos,
   todosFilter,
 } from '../utils/MainPageUtils';
+import { AnimatePresence } from 'motion/react';
 
+import { motion } from 'motion/react';
 function MainPage() {
   const [todos, setTodos] = useState<TodoType[]>(() => initializeTodos());
 
@@ -123,7 +125,9 @@ function MainPage() {
           Uncompleted
         </button>
       </div>
-      <div className="space-y-4 overflow-y-scroll">{todoItems}</div>
+      <motion.div className="space-y-4 overflow-y-scroll py-4">
+        <AnimatePresence>{todoItems}</AnimatePresence>
+      </motion.div>
       <div className="mx-auto mt-auto flex w-full max-w-6xl justify-between gap-x-4">
         <input
           type="text"
