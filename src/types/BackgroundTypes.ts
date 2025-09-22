@@ -10,3 +10,8 @@ export interface Circle {
   color: Color;
   position: Position;
 }
+
+export interface Size {
+  width: number;
+  height: number;
+}

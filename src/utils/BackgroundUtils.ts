@@ -11,20 +11,19 @@ export function generateRandomPosition(): Position {
   };
 }
 
-export function circlesGenerator(isDesktop: boolean) {
+export function circlesGenerator(
+  isDesktop: boolean,
+  containerWidth: number,
+  containerHeight: number,
+) {
   const colors: Color[] = ['#FB8B24', '#D90368', '#820263'];
   const circles: Circle[] = [];
 
   const noOfCircles = 2;
   const sizeRange = {
-    min: 100,
-    max: 250,
+    min: isDesktop ? 200 : 100,
+    max: isDesktop ? 400 : 250,
   };
-
-  if (isDesktop) {
-    sizeRange.min = 200;
-    sizeRange.max = 400;
-  }
 
   // First Circle
   circles.push({
@@ -34,23 +33,49 @@ export function circlesGenerator(isDesktop: boolean) {
   });
 
   for (let i = 1; i < noOfCircles; i++) {
-    const newWidth = generateRandomNumber(sizeRange.min, sizeRange.max);
-    const prevPosition: Position = circles[i - 1].position;
+    let newCircle: Circle;
+    let attempts = 0;
 
-    // new circle position is randomly offset from prev position
-    const newPosition: Position = {
-      x: (generateRandomNumber(10, 30) + prevPosition.x + newWidth) % 101,
-      y: (generateRandomNumber(10, 30) + prevPosition.y + newWidth) % 101,
-    };
-
-    const newCircle = {
-      color: colors[i],
-      width: newWidth,
-      position: newPosition,
-    };
+    do {
+      const newWidth = generateRandomNumber(sizeRange.min, sizeRange.max);
+      newCircle = {
+        color: colors[i % colors.length],
+        width: newWidth,
+        position: {
+          x: generateRandomNumber(0, 100),
+          y: generateRandomNumber(0, 100),
+        },
+      };
+      attempts++;
+      console.log(attempts);
+      if (attempts > 100) break; // avoid infinite loop if too crowded
+    } while (
+      isNewCircleColliding(newCircle, circles, containerWidth, containerHeight)
+    );
 
     circles.push(newCircle);
   }
 
   return circles;
+}
+
+function isNewCircleColliding(
+  newCircle: Circle,
+  circles: Circle[],
+  containerWidth: number,
+  containerHeight: number,
+): boolean {
+  const newX = (newCircle.position.x / 100) * containerWidth;
+  const newY = (newCircle.position.y / 100) * containerHeight;
+
+  return circles.some((circle) => {
+    const circleX = (circle.position.x / 100) * containerWidth;
+    const circleY = (circle.position.y / 100) * containerHeight;
+
+    const dx = newX - circleX;
+    const dy = newY - circleY;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+
+    return dist < newCircle.width / 2 + circle.width / 2;
+  });
 }
