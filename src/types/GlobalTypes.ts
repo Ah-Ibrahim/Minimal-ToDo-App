@@ -6,3 +6,5 @@ export interface TodoBody {
 export interface TodoType extends TodoBody {
   id: string;
 }
+
+export type ShownStatusType = 'all' | 'completed' | 'uncompleted';

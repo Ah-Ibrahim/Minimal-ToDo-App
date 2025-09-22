@@ -1,37 +1,13 @@
 import Todo from '../components/Todo';
 import { useEffect, useState } from 'react';
-import type { TodoType, TodoBody } from '../types/GlobalTypes';
+import type { TodoType, TodoBody, ShownStatusType } from '../types/GlobalTypes';
 import { nanoid } from 'nanoid';
-
-type ShownStatusType = 'all' | 'completed' | 'uncompleted';
-
-const todosFilter: Record<ShownStatusType, (item: TodoType) => boolean> = {
-  all: () => true,
-  completed: (item) => item.isCompleted === true,
-  uncompleted: (item) => item.isCompleted === false,
-};
-
-function initializeTodos(): TodoType[] {
-  const todosBodies: TodoBody[] = JSON.parse(
-    localStorage.getItem('Todos') ?? '[]'
-  );
-
-  const todos: TodoType[] = todosBodies.map((todoBody) => ({
-    ...todoBody,
-    id: nanoid(),
-  }));
-
-  return todos;
-}
-
-function saveTodos(todos: TodoType[]): void {
-  const todosBodies: TodoBody[] = todos.map((todo) => ({
-    ...todo,
-    id: undefined,
-  }));
-
-  localStorage.setItem('Todos', JSON.stringify(todosBodies));
-}
+import {
+  initializeTodos,
+  isValidInput,
+  saveTodos,
+  todosFilter,
+} from '../utils/MainPageUtils';
 
 function MainPage() {
   const [todos, setTodos] = useState<TodoType[]>(() => initializeTodos());
@@ -52,7 +28,7 @@ function MainPage() {
           text: changedTodo.text,
           isCompleted: changedTodo.isCompleted,
         };
-      }) ?? []
+      }) ?? [],
     );
   };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -116,9 +92,9 @@ function MainPage() {
   ));
 
   return (
-    <section className="p-8 h-full flex flex-col">
-      <h1 className="text-3xl mb-4 font-semibold">Active Tasks</h1>
-      <div className="flex gap-x-4 mb-8">
+    <section className="flex h-full flex-col p-8">
+      <h1 className="mb-4 text-3xl font-semibold">Active Tasks</h1>
+      <div className="mb-8 flex gap-x-4">
         <button
           className={`${
             shownStatus !== 'all' ? 'text-gray-500' : ''
@@ -148,18 +124,18 @@ function MainPage() {
         </button>
       </div>
       <div className="space-y-4 overflow-y-scroll">{todoItems}</div>
-      <div className="flex justify-between gap-x-4 mt-auto w-full max-w-6xl mx-auto">
+      <div className="mx-auto mt-auto flex w-full max-w-6xl justify-between gap-x-4">
         <input
           type="text"
           value={newTodoText}
           onChange={handleInputChange}
-          className={`border outline-0 p-2 rounded-lg  flex-1 transition-colors ${
+          className={`flex-1 rounded-lg border p-2 outline-0 transition-colors ${
             isValidInput(newTodoText) ? 'border-primary' : 'border-gray-500'
           }`}
           placeholder="Enter new task"
         />
         <button
-          className={` w-8 aspect-square transition-colors ${
+          className={`aspect-square w-8 transition-colors ${
             isValidInput(newTodoText)
               ? 'text-secondary drop-shadow-[0_0_6px_currentColor]'
               : 'text-gray-500'
@@ -181,7 +157,3 @@ function MainPage() {
   );
 }
 export default MainPage;
-
-function isValidInput(str: string): boolean {
-  return str.trim().length > 0;
-}
