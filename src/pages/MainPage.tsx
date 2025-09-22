@@ -1,5 +1,5 @@
 import Todo from '../components/Todo';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import type { TodoType, TodoBody } from '../types/GlobalTypes';
 import { nanoid } from 'nanoid';
 
@@ -29,7 +29,6 @@ function MainPage() {
 
   const [shownStatus, setIsShownStatus] = useState<ShownStatusType>('all');
   const [newTodoText, setNewTask] = useState<string>('');
-  const [isValidNewTask, setIsValidNewTask] = useState<boolean>(false);
 
   const filterFunc = todosFilter[shownStatus];
   const filteredTodos: TodoType[] = todos.filter(filterFunc);
@@ -49,8 +48,6 @@ function MainPage() {
   };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setNewTask(e.target.value);
-
-    setIsValidNewTask(isValidInput(e.target.value));
   };
 
   const addNewTask = (todoBody: TodoBody) => {
@@ -63,8 +60,12 @@ function MainPage() {
     ]);
   };
 
-  const handleNewClick = () => {
-    if (!isValidNewTask) {
+  const deleteTask = (todoId: string) => {
+    setTodos(todos.filter((item) => item.id !== todoId));
+  };
+
+  const handleNewTodo = () => {
+    if (!isValidInput(newTodoText)) {
       return;
     }
 
@@ -72,16 +73,37 @@ function MainPage() {
       text: newTodoText,
       isCompleted: false,
     });
+
     setNewTask('');
-    setIsValidNewTask(false);
   };
 
+  const handleNewClick = handleNewTodo;
+
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        handleNewTodo();
+      } else if (e.key === 'Escape') {
+        setNewTask('');
+      }
+    };
+
+    document.addEventListener('keydown', handler);
+
+    return () => document.removeEventListener('keydown', handler);
+  });
+
   const todoItems = filteredTodos.map((item) => (
-    <Todo key={item.id} todo={item} onChange={handleChangeTodo} />
+    <Todo
+      key={item.id}
+      todo={item}
+      onChange={handleChangeTodo}
+      onDelete={deleteTask}
+    />
   ));
 
   return (
-    <section className="p-8 relative h-full">
+    <section className="p-8 h-full flex flex-col">
       <h1 className="text-3xl mb-4 font-semibold">Active Tasks</h1>
       <div className="flex gap-x-4 mb-8">
         <button
@@ -112,24 +134,24 @@ function MainPage() {
           Uncompleted
         </button>
       </div>
-      <div className="space-y-4">{todoItems}</div>
-      <div className="absolute flex bottom-0 left-0 right-0 m-8 justify-between gap-x-4">
+      <div className="space-y-4 overflow-y-scroll">{todoItems}</div>
+      <div className="flex justify-between gap-x-4 mt-auto w-full max-w-6xl mx-auto">
         <input
           type="text"
           value={newTodoText}
           onChange={handleInputChange}
           className={`border outline-0 p-2 rounded-lg  flex-1 transition-colors ${
-            isValidNewTask ? 'border-primary' : 'border-gray-500'
+            isValidInput(newTodoText) ? 'border-primary' : 'border-gray-500'
           }`}
           placeholder="Enter new task"
         />
         <button
           className={` w-8 aspect-square transition-colors ${
-            isValidNewTask
+            isValidInput(newTodoText)
               ? 'text-secondary drop-shadow-[0_0_6px_currentColor]'
               : 'text-gray-500'
           }`}
-          disabled={!isValidNewTask}
+          disabled={!isValidInput(newTodoText)}
           onClick={handleNewClick}
         >
           <svg
