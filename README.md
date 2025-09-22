@@ -1,69 +1,133 @@
-# React + TypeScript + Vite
+# ✔️ Minimal Todo App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+_A clean and minimal TODO application built with React, TypeScript, and TailwindCSS.
+The app comes with a custom random background with glass effect, smooth animations for todos, and local storage support to persist tasks._
 
-Currently, two official plugins are available:
+![Project Screenshot](./design/Preview.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+[Live Preview](https://ah-ibrahim.github.io/Minimal-ToDo-App/)
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📋 Table of Contents
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- [About](#-about)
+- [Tech Stack](#%EF%B8%8F-tech-stack)
+- [Features](#-features)
+- [Getting Started](#%EF%B8%8F-getting-started)
+- [Project Structure](#project-structure)
+- [License](#-license)
+- [Credits](#-credits)
+- [Authors](#%EF%B8%8F-authors)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 👋 About
+
+This project is a simple yet polished TODO app showcasing modern frontend practices:
+
+- Built with React + TypeScript for robustness.
+
+- Styled with TailwindCSS for speed and maintainability.
+
+- Smooth animations when adding/removing todos.
+
+- Persistent state with local storage.
+
+- Random background generator + glassmorphism design for aesthetics.
+
+---
+
+## 🛠️ Tech Stack
+
+Here’s what’s under the hood:
+
+- **React + TypeScript** – component-based UI with static type safety
+
+- **TailwindCSS** – utility-first CSS framework for fast styling
+
+- **Motion** – animations and transitions
+
+- **LocalStorage API**
+
+---
+
+## ✨ Features
+
+Some cool stuff this project can do:
+
+- ➕ Add, check, and remove todos.
+
+- 🎨 Random background with a soft glass overlay.
+
+- 🌀 Animated transitions for todos.
+
+- 💾 Persistent storage — your todos stay after refresh.
+
+- 📱 Fully responsive design.
+
+---
+
+## ⚙️ Getting Started
+
+Wanna run this locally? Follow these steps:
+
+1. Clone the repo
+
+```bash
+git clone https://github.com/Ah-Ibrahim/Minimal-ToDo-App.git
+cd your-repo
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+2. Install dependencies
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
+
+3. Start the app
+
+```bash
+npm run dev
+```
+
+---
+
+## Project Structure
+
+```
+marketing-landing-page/
+├── public/              # Static assets
+├── src/
+|   ├─ assets/           # Components assets
+│   ├── components/      # UI components (presentation only)
+│   ├── utils/           # Utility functions
+│   ├── types/           # Zod schemas for validation
+│   ├── pages/           # Page-level components
+│   ├── hooks/           # Custom hooks
+│   └── main.tsx         # App entry point
+├── tailwind.config.js   # Tailwind config
+├── tsconfig.json        # TypeScript config
+└── package.json
+```
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+Feel free to do what you want with it.
+
+---
+
+## 🙏 Credits
+
+Big thanks to:
+
+- Icons from [Remix](https://remixicon.com/)
+
+---
+
+## ✍️ Authors
+
+Ahmed Ibrahim
