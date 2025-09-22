@@ -28,7 +28,7 @@ function MainPage() {
   const [todos, setTodos] = useState<TodoType[]>(initialTodos);
 
   const [shownStatus, setIsShownStatus] = useState<ShownStatusType>('all');
-  const [newTask, setNewTask] = useState<string>('');
+  const [newTodoText, setNewTask] = useState<string>('');
   const [isValidNewTask, setIsValidNewTask] = useState<boolean>(false);
 
   const filterFunc = todosFilter[shownStatus];
@@ -51,6 +51,29 @@ function MainPage() {
     setNewTask(e.target.value);
 
     setIsValidNewTask(isValidInput(e.target.value));
+  };
+
+  const addNewTask = (todoBody: TodoBody) => {
+    setTodos([
+      ...todos,
+      {
+        ...todoBody,
+        id: nanoid(),
+      },
+    ]);
+  };
+
+  const handleNewClick = () => {
+    if (!isValidNewTask) {
+      return;
+    }
+
+    addNewTask({
+      text: newTodoText,
+      isCompleted: false,
+    });
+    setNewTask('');
+    setIsValidNewTask(false);
   };
 
   const todoItems = filteredTodos.map((item) => (
@@ -93,7 +116,7 @@ function MainPage() {
       <div className="absolute flex bottom-0 left-0 right-0 m-8 justify-between gap-x-4">
         <input
           type="text"
-          value={newTask}
+          value={newTodoText}
           onChange={handleInputChange}
           className={`border outline-0 p-2 rounded-lg  flex-1 transition-colors ${
             isValidNewTask ? 'border-primary' : 'border-gray-500'
@@ -106,6 +129,8 @@ function MainPage() {
               ? 'text-secondary drop-shadow-[0_0_6px_currentColor]'
               : 'text-gray-500'
           }`}
+          disabled={!isValidNewTask}
+          onClick={handleNewClick}
         >
           <svg
             className=""
